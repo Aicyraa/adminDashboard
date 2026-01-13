@@ -1,0 +1,42 @@
+* {
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
+}
+
+html, body {
+   height: 100%;
+}
+
+.container {
+   height: 100%;
+   width: 100%;
+   display: grid;
+   grid-template: repeat(4, 1fr) / repeat(4, 1fr);
+   grid-template-areas: 
+      "sidebarL header header header"
+      "sidebarL main main sidebarR"
+      "sidebarL main main sidebarR"
+      "sidebarL main main sidebarR"
+   ;
+}
+
+/* Header */
+.header {
+   grid-area: header;
+}
+
+/* Sidebar */
+.sidebar {
+   grid-area: sidebarL;
+}
+
+/* Project Container */
+.project-container{
+   grid-area: main;
+}
+
+/* Miscellaneous */
+.miscellaneous-container {
+   grid-area: sidebarR;
+}
