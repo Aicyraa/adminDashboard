@@ -27,32 +27,33 @@
 * {
    padding: 0;
    margin: 0;
-   box-sizing: border-box;
    font-family: "Montserrat";
 }
 
+/* Updated Container - Remove fixed height and use min-height */
 html,
 body {
-   height: 100vh;
+   min-height: 100vh;
+   height: auto;
 }
 
 .container {
-   height: 100vh;
+   min-height: 100vh;
+   height: auto;
    width: 100%;
    display: grid;
-   grid-template: 1fr repeat(3, 2fr) / 1fr repeat(2, max(220px, 30%)) 2fr;
+   grid-template-columns: 250px 1fr 320px;
+   grid-template-rows: auto 1fr;
    grid-template-areas:
-      "sidebarL header header header"
-      "sidebarL main main sidebarR"
-      "sidebarL main main sidebarR"
-      "sidebarL main main sidebarR";
-
+      "sidebarL header header"
+      "sidebarL main sidebarR";
    background-color: var(--pale-light);
 }
 
 /* Header */
 .header {
-   position: relative;
+   position: sticky;
+   top: 0;
    z-index: 10;
    grid-area: header;
    background-color: var(--light);
@@ -174,11 +175,13 @@ body {
 .sidebar {
    grid-area: sidebarL;
    background: var(--accent-1);
-
    display: grid;
    grid-template-rows: 100px 1fr 1fr;
    row-gap: 1.5rem;
-   /* height: 100vh; */
+   position: sticky;
+   top: 0;
+   height: 100vh;
+   overflow-y: auto;
 }
 
 .logo-container > img {
@@ -220,15 +223,15 @@ body {
 .project-container {
    grid-area: main;
    padding: 2rem;
-   overflow: scroll;
+   /* REMOVED: overflow: scroll; */
+   /* REMOVED: height constraint */
 
    display: grid;
    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-   grid-template-rows: repeat(4, 3fr);
-   grid-auto-rows: minmax(200px 1fr);
+   grid-auto-rows: 200px;
    gap: 1rem;
    justify-content: center;
-   align-items: center;
+   align-items: start;
 }
 
 ::-webkit-scrollbar,
@@ -240,7 +243,7 @@ body {
    display: flex;
    flex-direction: column;
    background-color: var(--light);
-   box-shadow: 0px 0px 6px var(--accent-1);
+   box-shadow: 1px 2px 4px var(--accent-1);
    height: 200px;
 
    border-radius: 0.9rem;
@@ -258,7 +261,7 @@ body {
 
 .title {
    font-weight: bold;
-   font-size: .85rem;
+   font-size: 0.85rem;
    color: var(--text-muted);
    letter-spacing: 2px;
 }
@@ -305,9 +308,9 @@ body {
 .overlay {
    border-image: fill 1
       linear-gradient(
-         hsla(0, 0%, 7%, 0.6),
-         hsla(0, 0%, 4%, 0.7),
-         hsla(0, 0%, 4%, 0.9)
+         hsla(0, 0%, 5%, 0.5),
+         hsla(0, 0%, 3%, 0.8),
+         hsla(0, 0%, 2%, 0.9)
       );
    transition: 200ms ease;
 }
@@ -331,19 +334,42 @@ body {
 }
 
 .image-container:hover ~ .text-container {
-   transform: translateY(4.5rem);
+   transform: translateY(5rem);
 }
 
 /* Miscellaneous */
+/* Miscellaneous Container - Improved Version */
 .miscellaneous-container {
    grid-area: sidebarR;
    background-color: var(--pale-light);
    display: flex;
    flex-direction: column;
-   justify-content: center;
+   justify-content: flex-start;
    align-items: center;
    gap: 2rem;
-   padding: 1.2rem 0;
+   padding: 2rem 1rem;
+   position: sticky;
+   top: 0;
+   height: 100vh;
+   overflow-y: auto;
+}
+
+/* Keep the scrollbar hidden for the main project container if needed */
+.miscellaneous-container::-webkit-scrollbar {
+   width: 6px;
+}
+
+.miscellaneous-container::-webkit-scrollbar-track {
+   background: transparent;
+}
+
+.miscellaneous-container::-webkit-scrollbar-thumb {
+   background: var(--accent-3);
+   border-radius: 10px;
+}
+
+.miscellaneous-container::-webkit-scrollbar-thumb:hover {
+   background: var(--accent-2);
 }
 
 .news-container,
@@ -351,50 +377,108 @@ body {
    display: flex;
    flex-direction: column;
    justify-content: center;
-   gap: 1.1rem;
-   border-radius: 0.5rem;
+   gap: 1.2rem;
+   border-radius: 12px;
    background-color: var(--light);
-   box-shadow: 0 0 4px var(--accent-1);
-   padding: 16px 1.4rem;
-   width: 280px;
-   height: fit-content;
-   overflow: scroll;
-   max-height: 400px;
+   box-shadow: 0 2px 8px rgba(24, 61, 61, 0.1),
+      0 4px 16px rgba(24, 61, 61, 0.08);
+   padding: 1.5rem;
+   width: 100%;
+   max-width: 250px;
+   height: auto;
+   /* overflow: hidden; */
+   transition: all 0.3s ease;
+   border: 1px solid rgba(93, 146, 130, 0.1);
 }
 
+.news-container:hover,
+.trending-container:hover {
+   box-shadow: 0 4px 12px rgba(24, 61, 61, 0.15),
+      0 8px 24px rgba(24, 61, 61, 0.1);
+   transform: translateY(-2px);
+}
+
+/* Section Headers */
+.news-container::before,
+.trending-container::before {
+   font-weight: 700;
+   font-size: 1.1rem;
+   color: var(--accent-1);
+   letter-spacing: 0.5px;
+   margin-bottom: 0.5rem;
+   padding-bottom: 0.8rem;
+   border-bottom: 2px solid var(--accent-3);
+}
+
+.news-container::before {
+   content: "📰 Latest News";
+}
+
+.trending-container::before {
+   content: "🔥 Trending";
+}
+
+/* News Items */
 .news {
    display: flex;
    flex-direction: column;
-   gap: 4px;
+   gap: 6px;
+   padding: 1rem;
+   border-radius: 8px;
+   background-color: rgba(255, 255, 255, 0.6);
+   transition: all 0.2s ease;
+   cursor: pointer;
+   border-left: 3px solid transparent;
+}
+
+.news:hover {
+   background-color: rgba(93, 146, 130, 0.05);
+   border-left-color: var(--accent-3);
+   transform: translateX(4px);
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .news-title {
-   color: var(--text);
-   font-weight: bold;
-   font-size: 1rem;
+   color: var(--accent-1);
+   font-weight: 700;
+   font-size: 0.95rem;
+   letter-spacing: 0.3px;
 }
 
 .news-text {
    color: var(--text-muted);
    font-size: 0.85rem;
+   line-height: 1.5;
 }
 
+/* Trending Items */
 .trending {
    display: flex;
    align-items: center;
    gap: 1rem;
+   padding: 0.8rem;
+   border-radius: 8px;
+   background-color: rgba(255, 255, 255, 0.6);
+   transition: all 0.2s ease;
+   cursor: pointer;
 }
 
-.profile {
-   font-weight: bolder;
+.trending:hover {
+   background-color: rgba(93, 146, 130, 0.08);
+   transform: scale(1.02);
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .trending-profile {
    border-radius: 50%;
    background-position: center;
    background-size: cover;
-   height: 40px;
-   width: 40px;
+   height: 48px;
+   width: 48px;
+   flex-shrink: 0;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+   border: 2px solid var(--light);
+   transition: all 0.2s ease;
 }
 
 .trending-profile-1 {
@@ -407,4 +491,51 @@ body {
 
 .trending-profile-3 {
    background-image: url("assets/pfp3.jpeg");
+}
+
+.trending:hover .trending-profile {
+   transform: scale(1.08);
+   box-shadow: 0 4px 12px rgba(24, 61, 61, 0.25);
+}
+
+.trending-text {
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+   flex: 1;
+}
+
+.trending-text .profile {
+   font-weight: 700;
+   font-size: 0.9rem;
+   color: var(--accent-1);
+   letter-spacing: 0.3px;
+}
+
+.status {
+   color: var(--text-muted);
+   font-size: 0.8rem;
+   font-weight: 500;
+}
+
+/* Scrollbar styling for containers */
+.news-container::-webkit-scrollbar,
+.trending-container::-webkit-scrollbar {
+   width: 6px;
+}
+
+.news-container::-webkit-scrollbar-track,
+.trending-container::-webkit-scrollbar-track {
+   background: transparent;
+}
+
+.news-container::-webkit-scrollbar-thumb,
+.trending-container::-webkit-scrollbar-thumb {
+   background: var(--accent-3);
+   border-radius: 10px;
+}
+
+.news-container::-webkit-scrollbar-thumb:hover,
+.trending-container::-webkit-scrollbar-thumb:hover {
+   background: var(--accent-2);
 }
